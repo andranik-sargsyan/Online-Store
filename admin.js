@@ -54,18 +54,31 @@ const products = [
     }
 ];
 
+let currentId = products[products.length - 1].id + 1;
+
 const grid = new gridjs.Grid({
     columns: [
         {
             name: "ID",
-            width: "80px"
+            sort: true,
+            width: "100px"
         },
         {
             name: "Name",
-            sort: true
+            sort: true,
+            width: "200px"
+        },
+        {
+            name: "Description",
+            attributes: {
+                'style': 'text-overflow: ellipsis; overflow: hidden; white-space: nowrap;'
+            },
+            width: "500px",
+            formatter: description => gridjs.html(`<span title="${description}">${description}</span>`)
         },
         {
             name: "Price",
+            width: "140px",
             sort: true,
             formatter: price => `$${price}`
         },
@@ -89,8 +102,39 @@ const grid = new gridjs.Grid({
                 'style': 'text-transform: capitalize;'
             },
             formatter: cid => categoriesArray.find(c => c.id == cid).name
+        },
+        {
+            id: "img",
+            name: "Image",
+            width: "200px",
+            formatter: img => img && gridjs.html(`<a href="${img}" target="_blank"><img src="${img}" class="img-thumbnail" alt="Image" /></a>`)
         }
     ],
-    //["ID", "Name", /*"Description", "IMG",*/ "Price", "Category"],
     data: products
 }).render(document.getElementById("grid-container"));
+
+let btnAdd = document.getElementById("btn-add");
+let txtName = document.getElementById("txt-name");
+let txtDescription = document.getElementById("txt-description");
+let txtPrice = document.getElementById("txt-price");
+let ddlCategory = document.getElementById("ddl-category");
+let txtImg = document.getElementById("txt-img");
+
+btnAdd.addEventListener("click", () => {
+    let product = {
+        id: currentId++,
+        name: txtName.value,
+        description: txtDescription.value,
+        img: txtImg.value,
+        price: txtPrice.value,
+        category: +ddlCategory.value
+    };
+
+    products.push(product);
+
+    grid.forceRender();
+
+    var modalAddProduct = document.getElementById('addProduct');
+    var modal = bootstrap.Modal.getInstance(modalAddProduct)
+    modal.hide();
+});

@@ -26,17 +26,29 @@ btnLogin.addEventListener("click", () => {
     if (user) {
         localStorage["session"] = JSON.stringify({ user: user });
 
-        if (user.role == "admin") {
-            location.href = "admin.html";
-        }
-        else if (user.role == "user") {
-            location.href = "user.html";
-        }
-        else {
-            alert("Invalid role.");
-        }
+        redirectUser(user);
     }
     else {
         alert("Invalid user.");
     }
 });
+
+function redirectUser(user) {
+    if (user.role == "admin") {
+        location.href = "admin.html";
+    }
+    else if (user.role == "user") {
+        location.href = "user.html";
+    }
+    else {
+        alert("Invalid role.");
+    }
+}
+
+let session = localStorage["session"];
+
+session = session ? JSON.parse(session) : {};
+
+if (session.user) {
+    redirectUser(session.user);
+}
