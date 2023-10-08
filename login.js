@@ -18,6 +18,16 @@ let users = [
 ];
 
 btnLogin.addEventListener("click", () => {
+    login();
+});
+
+document.addEventListener("keydown", e => {
+    if (e.key == "Enter") {
+        login();
+    }
+});
+
+function login() {
     let txtEmail = document.getElementById("txt-email");
     let txtPassword = document.getElementById("txt-password");
 
@@ -31,7 +41,7 @@ btnLogin.addEventListener("click", () => {
     else {
         alert("Invalid user.");
     }
-});
+}
 
 function redirectUser(user) {
     if (user.role == "admin") {
